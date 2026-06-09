@@ -141,11 +141,8 @@ if (sendBtn) {
     sendBtn.onclick = async () => {
         const nameInput = document.getElementById("guestName");
         const name = nameInput ? nameInput.value.trim() : "";
-        
-        // Ապահով ստացում. եթե դաշտը չկա կամ թաքնված է, ուղարկում ենք 1 կամ 0
         const countElement = document.getElementById("guestCount");
         const guestCount = currentStatus === "Այո" ? (countElement ? countElement.value : 1) : 0;
-        
         const guestWish = document.getElementById("guestWish").value;
 
         if (!name) {
@@ -178,6 +175,7 @@ if (sendBtn) {
             );
 
             const data = await response.json();
+
             if (data.ok) {
                 const popup = document.getElementById("successPopup");
                 if (popup) {
@@ -188,11 +186,12 @@ if (sendBtn) {
                 if (nameInput) nameInput.value = "";
                 document.getElementById("guestWish").value = "";
             } else {
-                alert("Սխալ տեղի ունեցավ, նորից փորձեք։");
+                // Ահա այստեղ այն ցույց կտա իրական սխալը
+                alert(data.description || "Անհայտ սխալ կայքում։");
             }
         } catch (error) {
             console.error(error);
-            alert("Կապի սխալ։");
+            alert("Կապի սխալ դեպի Worker։");
         } finally {
             sendBtn.disabled = false;
             sendBtn.innerHTML = "Հաստատել";
