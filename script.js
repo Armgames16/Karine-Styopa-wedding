@@ -121,11 +121,14 @@ document.querySelectorAll(".option").forEach(btn => {
 
         currentStatus = btn.dataset.val;
         const countBox = document.getElementById("countBox");
+        const countLabel = document.querySelector(".count-label");
 
         if (currentStatus === "Այո") {
-            countBox.style.display = "block";
+            if (countBox) countBox.style.display = ""; // Վերականգնում է սկզբնական CSS-ը (flex/grid)
+            if (countLabel) countLabel.style.display = "block";
         } else {
-            countBox.style.display = "none";
+            if (countBox) countBox.style.display = "none";
+            if (countLabel) countLabel.style.display = "none";
         }
     });
 });
@@ -138,7 +141,11 @@ if (sendBtn) {
     sendBtn.onclick = async () => {
         const nameInput = document.getElementById("guestName");
         const name = nameInput ? nameInput.value.trim() : "";
-        const guestCount = currentStatus === "Այո" ? document.getElementById("guestCount").value : 0;
+        
+        // Ապահով ստացում. եթե դաշտը չկա կամ թաքնված է, ուղարկում ենք 1 կամ 0
+        const countElement = document.getElementById("guestCount");
+        const guestCount = currentStatus === "Այո" ? (countElement ? countElement.value : 1) : 0;
+        
         const guestWish = document.getElementById("guestWish").value;
 
         if (!name) {
