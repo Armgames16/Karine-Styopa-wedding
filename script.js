@@ -121,14 +121,11 @@ document.querySelectorAll(".option").forEach(btn => {
 
         currentStatus = btn.dataset.val;
         const countBox = document.getElementById("countBox");
-        const countLabel = document.querySelector(".count-label");
 
         if (currentStatus === "Այո") {
-            if (countBox) countBox.style.display = ""; // Վերականգնում է սկզբնական CSS-ը (flex/grid)
-            if (countLabel) countLabel.style.display = "block";
+            countBox.style.display = "block";
         } else {
-            if (countBox) countBox.style.display = "none";
-            if (countLabel) countLabel.style.display = "none";
+            countBox.style.display = "none";
         }
     });
 });
@@ -140,16 +137,19 @@ const sendBtn = document.getElementById("sendBtn");
 if (sendBtn) {
     sendBtn.onclick = async () => {
         const nameInput = document.getElementById("guestName");
+        const countInput = document.getElementById("guestCount");
+        const wishInput = document.getElementById("guestWish");
+
         const name = nameInput ? nameInput.value.trim() : "";
-        const countElement = document.getElementById("guestCount");
-        const guestCount = currentStatus === "Այո" ? (countElement ? countElement.value : 1) : 0;
-        const guestWish = document.getElementById("guestWish").value;
+        const guestCount = currentStatus === "Այո" && countInput ? countInput.value : 0;
+        const guestWish = wishInput ? wishInput.value.trim() : "";
 
         if (!name) {
             alert("Խնդրում ենք գրել Ձեր անունը");
             return;
         }
 
+        // Հայերեն, ռուսերեն, անգլերեն տառերի և բացատների Regex
         const nameRegex = /^[a-zA-Zа-яА-ЯԱ-Ֆա-ֆև\s]+$/;
         if (!nameRegex.test(name)) {
             alert("Անունը կարող է պարունակել միայն տառեր");
@@ -168,30 +168,31 @@ if (sendBtn) {
                     body: JSON.stringify({
                         name,
                         status: currentStatus,
-                        count: guestCount,
+                        count: Number(guestCount),
                         wish: guestWish
                     })
                 }
             );
 
             const data = await response.json();
-
             if (data.ok) {
                 const popup = document.getElementById("successPopup");
                 if (popup) {
                     popup.style.display = "block";
                     setTimeout(() => { popup.style.display = "none"; }, 4000);
                 }
+
+                // Մաքրում ենք դաշտերը ճիշտ ձևով
                 modal.style.display = "none";
                 if (nameInput) nameInput.value = "";
-                document.getElementById("guestWish").value = "";
+                if (wishInput) wishInput.value = "";
+                if (countInput) countInput.value = "1";
             } else {
-                // Ահա այստեղ այն ցույց կտա իրական սխալը
-                alert(data.description || "Անհայտ սխալ կայքում։");
+                alert("Սխալ տեղի ունեցավ, նորից փորձեք։");
             }
         } catch (error) {
             console.error(error);
-            alert("Կապի սխալ դեպի Worker։");
+            alert("Կապի սխալ։");
         } finally {
             sendBtn.disabled = false;
             sendBtn.innerHTML = "Հաստատել";
