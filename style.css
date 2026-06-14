@@ -19,11 +19,19 @@ body {
     background:#e6d5cf;
     color: #5c5954;
     position:relative;
-    touch-action: pan-x pan-y;
+    touch-action: auto; /* Փոխիր pan-x pan-y-ից auto-ի, որ չսառեցնի */
     overflow-x:hidden;
-    overflow-y:auto;
+    overflow-y: auto; /* Սա թող միշտ լինի auto */
     width:100%;
     height: auto;
+}
+
+/* Ավելացրու այս նոր դասը CSS-ի վերջում */
+.no-scroll {
+    overflow: hidden !important;
+    height: 100vh !important;
+    position: fixed;
+    width: 100%;
 }
 
 /* =========================
