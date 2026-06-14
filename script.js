@@ -6,12 +6,17 @@ const welcomeScreen = document.getElementById("welcomeScreen");
 const musicBtn = document.getElementById("musicToggle");
 const bgMusic = document.getElementById("bgMusic");
 
+// Կայքը բեռնվելիս ապահովագրում ենք, որ սքրոլ չլինի մինչև չսեղմեն կոճակը
+document.body.classList.add("no-scroll");
+
 if (openBtn) {
     openBtn.addEventListener("click", () => {
         welcomeScreen.style.opacity = "0";
         welcomeScreen.style.transform = "scale(1.02)";
         welcomeScreen.style.pointerEvents = "none";
 
+        // Ջնջում ենք no-scroll դասը, որ սքրոլը բոլոր հեռախոսների վրա միանգամից բացվի
+        document.body.classList.remove("no-scroll");
         document.body.style.overflow = "auto";
         document.documentElement.style.overflow = "auto";
 
